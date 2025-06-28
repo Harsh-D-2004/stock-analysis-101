@@ -70,3 +70,22 @@ def get_stock_analysis(stock_name):
     final_df = pd.concat(all_summaries, axis=1)
     final_df = final_df.to_string()
     return final_df
+
+def get_current_stock_details(stock_name):
+
+    ticker = yf.Ticker(stock_name)
+    data = ticker.history(period="1d")  # Gets today's data
+
+    if data.empty:
+        return {"error": "No data available for this ticker."}
+
+    current_info = {
+        "symbol": stock_name,
+        "open": round(data["Open"].iloc[0], 2),
+        "high": round(data["High"].iloc[0], 2),
+        "low": round(data["Low"].iloc[0], 2),
+        "close": round(data["Close"].iloc[0], 2),
+        "volume": int(data["Volume"].iloc[0])
+    }
+
+    return current_info
